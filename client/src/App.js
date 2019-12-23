@@ -4,18 +4,27 @@ import NoMatch from "./pages/NoMatch";
 import Nav from "./components/Nav";
 
 class App extends Component {
-
+  constructor() {
+    super();
+    this.state = {
+      
+    }
+  }
 
 
   render() {
     return (
       <Router>
         <Fragment>
+
+
           <Nav />
           <Switch>
             {/* <Route exact path="/" component={} /> */}
             <Route component={NoMatch} />
           </Switch>
+
+          
         </Fragment>
       </Router>
     );

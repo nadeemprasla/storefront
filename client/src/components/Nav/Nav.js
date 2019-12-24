@@ -1,25 +1,19 @@
-import React from 'react';
-import { makeStyles } from '@material-ui/core/styles';
-import {
-  AppBar,
-  Toolbar,
-  Typography,
-  Button,
-  IconButton
-} from '@material-ui/core'
+import React from "react";
+import { makeStyles } from "@material-ui/core/styles";
+import { AppBar, Toolbar, Typography, Button, IconButton } from "@material-ui/core";
 
-import {Menu} from '@material-ui/icons'
+import { Menu } from "@material-ui/icons";
 
 const useStyles = makeStyles(theme => ({
   root: {
-    flexGrow: 1,
+    flexGrow: 1
   },
   menuButton: {
-    marginRight: theme.spacing(0),
+    marginRight: theme.spacing(0)
   },
   title: {
-    flexGrow: 1,
-  },
+    flexGrow: 1
+  }
 }));
 
 export default function Nav() {
@@ -27,10 +21,15 @@ export default function Nav() {
 
   return (
     <div className={classes.root}>
-      <AppBar position="static">
+      <AppBar position="fixed">
         <Toolbar>
-          <IconButton edge="start" className={classes.menuButton} color="inherit" aria-label="menu">
-            <Menu/>
+          <IconButton
+            edge="start"
+            className={classes.menuButton}
+            color="inherit"
+            aria-label="menu"
+          >
+            <Menu />
           </IconButton>
           <Typography variant="h6" className={classes.title}>
             Store Front

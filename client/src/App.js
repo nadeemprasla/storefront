@@ -1,34 +1,36 @@
-import React, { Component, Fragment } from "react";
-import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
-import NoMatch from "./pages/NoMatch";
+import React, { Component } from "react";
+import { BrowserRouter as Router } from "react-router-dom";
+import { Grid } from "@material-ui/core";
 import Nav from "./components/Nav";
+import Footer from "./components/Footer";
+import Routes from "./components/Routes";
+import Login from "./components/Login";
+import { Toolbar } from "@material-ui/core";
 
 class App extends Component {
   constructor() {
     super();
     this.state = {
-      
-    }
+      user: {},
+      auth: true
+    };
   }
-
 
   render() {
     return (
       <Router>
-        <Fragment>
-
-
-          <Nav />
-          <Switch>
-            {/* <Route exact path="/" component={} /> */}
-            <Route component={NoMatch} />
-          </Switch>
-
-          
-        </Fragment>
+        {!this.state.auth ? (
+          <Login />
+        ) : (
+          <Grid container direction="column">
+            <Nav />
+            <Toolbar />
+            <Routes />
+            <Footer />
+          </Grid>
+        )}
       </Router>
     );
-
   }
 }
 export default App;

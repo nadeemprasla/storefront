@@ -2,6 +2,8 @@ import React, { Component } from "react";
 import PropTypes from 'prop-types';
 import { withStyles } from "@material-ui/core/styles";
 import { Paper, Button, TextField } from "@material-ui/core";
+import API from "../../utils/API"
+
 
 const styles = theme => ({
   root: {
@@ -28,14 +30,15 @@ class RegisterMenu extends Component {
     this.state = {
       firstName: null,
       lastName: null,
+      username:null,
       email: null,
       password: null,
       errors: {
         firstName: "",
         lastName: "",
         email: "",
+        username: "",
         password: "",
-
       }
     }
   }
@@ -58,8 +61,14 @@ class RegisterMenu extends Component {
   }
   handleSubmit = (event) => {
     event.preventDefault();
+    API.saveUser({
+        firstName: this.state.firstName,
+        lastName: this.state.lastName,
+        username: this.state.username,
+        email: this.state.email,
+        password: this.state.password
+    })
 
-    console.log(event.target.value)
   }
 
   render() {
@@ -87,7 +96,6 @@ class RegisterMenu extends Component {
               label="Last Name"
               name="lastName"
               onChange={this.handleChange}
-
             />
             <TextField
               variant="outlined"
@@ -98,7 +106,16 @@ class RegisterMenu extends Component {
               label="Email Address"
               name="email"
               onChange={this.handleChange}
-
+            />
+            <TextField
+              variant="outlined"
+              margin="normal"
+              required
+              fullWidth
+              id="username"
+              label="Username"
+              name="username"
+              onChange={this.handleChange}
             />
             <TextField
               variant="outlined"

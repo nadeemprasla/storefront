@@ -67,6 +67,8 @@ class RegisterMenu extends Component {
         username: this.state.username,
         email: this.state.email,
         password: this.state.password
+    }).then((res)=>{
+      console.log(res.data)
     })
 
   }

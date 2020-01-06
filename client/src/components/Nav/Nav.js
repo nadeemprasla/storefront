@@ -1,7 +1,7 @@
 import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
-import { AppBar, Toolbar, Typography, Button, IconButton } from "@material-ui/core";
-
+import { AppBar, Toolbar, Typography, IconButton } from "@material-ui/core";
+import Logout from "./Logout"
 import { Menu } from "@material-ui/icons";
 
 const useStyles = makeStyles(theme => ({
@@ -34,7 +34,7 @@ export default function Nav() {
           <Typography variant="h6" className={classes.title}>
             Store Front
           </Typography>
-          <Button color="inherit">Login</Button>
+            <Logout />
         </Toolbar>
       </AppBar>
     </div>

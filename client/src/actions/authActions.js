@@ -1,19 +1,18 @@
 import API from "../utils/API";
-import { returnErrors } from "./errorActions";
+import { returnErrors, clearErrors } from "./errorActions";
 import {
   USER_LOADING,
   USER_LOADED,
   AUTH_ERROR,
-  LOGIN_SUCESS,
+  LOGIN_SUCCESS,
   LOGIN_FAIL,
-  LOGOUT_SUCCESS,
   REGISTER_SUCCESS,
-  REGISTER_FAIL
+  REGISTER_FAIL,
+  LOGOUT_SUCCESS
 } from "../actions/types";
 
 export const loadUser = () => (dispatch, getState) => {
   dispatch({ type: USER_LOADING });
-
   API.getUsers(tokenConfig(getState))
     .then(res => {
       dispatch({
@@ -30,12 +29,12 @@ export const loadUser = () => (dispatch, getState) => {
 };
 
 export const register = ({
-    firstName,
-    lastName,
-    username,
-    email,
-    password
-  }) => dispatch => {
+  firstName,
+  lastName,
+  username,
+  email,
+  password
+}) => dispatch => {
   const config = {
     headers: {
       "Content-Type": "application/json"
@@ -65,6 +64,51 @@ export const register = ({
     });
 };
 
+export const login = ({
+  username,
+  password
+}) => dispatch => {
+  const config = {
+    headers: {
+      "Content-Type": "application/json"
+    }
+  };
+
+  const body = {
+    username,
+    password
+  };
+
+  API.loginUser(body, config)
+    .then(res =>
+      dispatch({
+        type: LOGIN_SUCCESS,
+        payload: res.data
+      })
+    )
+    .catch(err => {
+      dispatch(returnErrors(err.response.data, err.response.status, 'LOGIN_FAIL'));
+      dispatch({
+        type: LOGIN_FAIL
+      });
+    });
+};
+
+export const logout = () => {
+  return {
+    type: LOGOUT_SUCCESS
+  }
+}
+
+// export const tokenConfig = getState => {
+//   const token = getState().auth.token;
+//   let body = {}
+//   if (token) {
+//     body = { "x-auth-token": token }
+//     console.log(body)
+//   }
+//   return body;
+// };
 export const tokenConfig = getState => {
   const token = getState().auth.token;
   const config = {

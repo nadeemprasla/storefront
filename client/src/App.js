@@ -6,9 +6,9 @@ import Footer from "./components/Footer";
 import Routes from "./components/Routes";
 import Login from "./components/Login";
 import { Toolbar } from "@material-ui/core";
-import { Provider } from "react-redux";
-import store from "./store";
-import {loadUser} from './actions/authActions'
+import { connect } from "react-redux";
+import PropTypes from "prop-types";
+
 
 class App extends Component {
   constructor() {
@@ -18,28 +18,31 @@ class App extends Component {
       auth: false
     };
   }
-
-  componentDidMount() {
-      store.dispatch(loadUser())
+  static propTypes = {
+    auth: PropTypes.object.isRequired
   }
-
   render() {
+    const {isAuthenticated, user} = this.props.auth;
+
     return (
-      <Provider store={store}>
         <Router>
-          {!this.state.auth ? (
+          {!isAuthenticated ? (
             <Login />
           ) : (
-            <Grid container direction="column">
-              <Nav />
-              <Toolbar />
-              <Routes />
-              <Footer />
-            </Grid>
-          )}
+              <Grid container direction="column">
+                <Nav />
+                <Toolbar />
+                <Routes />
+                <Footer />
+              </Grid>
+            )}
         </Router>
-      </Provider>
     );
   }
 }
-export default App;
+
+const mapStateToProps = state => ({
+  auth: state.auth
+});
+
+export default connect(mapStateToProps, null)(App);

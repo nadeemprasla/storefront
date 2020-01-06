@@ -1,8 +1,10 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { withStyles } from "@material-ui/core/styles";
-import { Paper, Checkbox, Button, TextField, FormControlLabel} from "@material-ui/core";
-import API from "../../utils/API";
+import { Paper, Checkbox, Button, TextField, FormControlLabel } from "@material-ui/core";
+import { connect } from "react-redux";
+import { login } from "../../actions/authActions";
+import { clearErrors } from '../../actions/errorActions';
 
 const styles = theme => ({
   root: {
@@ -26,8 +28,30 @@ class LoginMenu extends Component {
     super();
     this.state = {
       username: null,
-      password: null
+      password: null,
+      errors: {
+        username: "",
+        password: ""
+      }
     };
+  }
+
+  static propTypes = {
+    isAuthenticated: PropTypes.bool,
+    error: PropTypes.object.isRequired,
+    login: PropTypes.func.isRequired,
+    clearErrors: PropTypes.func.isRequired
+  };
+
+  componentDidUpdate(prevProps) {
+    const { error } = this.props;
+    if (error !== prevProps.error) {
+      if (error.id === "LOGIN") {
+        this.setState({
+          errors: { ...prevProps.errors, username: error.msg.username, password: error.msg.password }
+        });
+      }
+    }
   }
 
   handleChange = event => {
@@ -36,11 +60,16 @@ class LoginMenu extends Component {
       [name]: value
     });
   };
+
   handleSubmit = event => {
     event.preventDefault();
-    API.loginUser(this.state).then((res)=>{
-        console.log("you are logged in")
-    })
+    const user = {
+      username: this.state.username,
+      password: this.state.password
+    };
+
+    this.props.login(user);
+    
   };
 
   render() {
@@ -95,4 +124,10 @@ LoginMenu.propTypes = {
   classes: PropTypes.object.isRequired
 };
 
-export default withStyles(styles)(LoginMenu);
+const mapStateToProps = state => ({
+  isAuthenticated: state.auth.isAuthenticated,
+  error: state.error
+});
+const newLoginMenu = withStyles(styles)(LoginMenu);
+export default connect(mapStateToProps, { login, clearErrors })(newLoginMenu);
+

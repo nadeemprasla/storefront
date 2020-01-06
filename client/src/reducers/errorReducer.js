@@ -6,7 +6,7 @@ const initialState = {
   id: null
 };
 
-export default function(state = initialState, action) {
+export default function (state = initialState, action) {
   switch ((action.type)) {
     case GET_ERRORS:
       return {
@@ -14,17 +14,14 @@ export default function(state = initialState, action) {
         status: action.payload.status,
         id: action.payload.id
       };
-      break;
     case CLEAR_ERRORS:
       return {
         msg: {},
         status: null,
         id: null
       };
-      break;
-
     default:
-        return state;
-      break;
+      return state;
+
   }
 }

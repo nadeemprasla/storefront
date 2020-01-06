@@ -4,6 +4,7 @@ import { withStyles } from "@material-ui/core/styles";
 import { Paper, Button, TextField } from "@material-ui/core";
 import { connect } from "react-redux";
 import { register } from "../../actions/authActions";
+import { clearErrors } from '../../actions/errorActions';
 
 const styles = theme => ({
   root: {
@@ -21,9 +22,9 @@ const styles = theme => ({
   }
 });
 
-const validEmailRegex = RegExp(
-  /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i
-);
+// const validEmailRegex = RegExp(
+//   /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i
+// );
 
 class RegisterMenu extends Component {
   constructor() {
@@ -45,7 +46,8 @@ class RegisterMenu extends Component {
   static propTypes = {
     isAuthenticated: PropTypes.bool,
     error: PropTypes.object.isRequired,
-    register: PropTypes.func.isRequired
+    register: PropTypes.func.isRequired,
+    clearErrors: PropTypes.func.isRequired
   };
 
   componentDidUpdate(prevProps) {
@@ -61,14 +63,14 @@ class RegisterMenu extends Component {
 
   handleChange = event => {
     const { name, value } = event.target;
-    let error = "";
-    if (name === "confirm-password") {
-      this.state.password === value
-        ? (error = "same password")
-        : (error = "error");
-    }
-    if (name === "email") {
-    }
+    // let error = "";
+    // if (name === "confirm-password") {
+    //   this.state.password === value
+    //     ? (error = "same password")
+    //     : (error = "error");
+    // }
+    // if (name === "email") {
+    // }
 
     this.setState({
       [name]: value
@@ -181,4 +183,4 @@ const mapStateToProps = state => ({
 
 const newRegisterMenu = withStyles(styles)(RegisterMenu);
 
-export default connect(mapStateToProps, { register })(newRegisterMenu);
+export default connect(mapStateToProps, { register, clearErrors })(newRegisterMenu);

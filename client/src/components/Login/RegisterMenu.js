@@ -1,28 +1,29 @@
 import React, { Component } from "react";
-import PropTypes from 'prop-types';
+import PropTypes from "prop-types";
 import { withStyles } from "@material-ui/core/styles";
 import { Paper, Button, TextField } from "@material-ui/core";
-import API from "../../utils/API"
-
+import { connect } from "react-redux";
+import { register } from "../../actions/authActions";
 
 const styles = theme => ({
   root: {
     borderRadius: 3,
     border: 0,
-    padding: '1vh 1vw',
-    boxShadow: '0 3px 5px 2px rgba(255, 105, 135, .3)',
+    padding: "1vh 1vw",
+    boxShadow: "0 3px 5px 2px rgba(255, 105, 135, .3)",
     width: "35vw"
-
   },
   form: {
-    marginTop: theme.spacing(1),
+    marginTop: theme.spacing(1)
   },
   submit: {
-    margin: theme.spacing(3, 0, 3),
-  },
+    margin: theme.spacing(3, 0, 3)
+  }
 });
 
-const validEmailRegex = RegExp(/^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i);
+const validEmailRegex = RegExp(
+  /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i
+);
 
 class RegisterMenu extends Component {
   constructor() {
@@ -30,48 +31,60 @@ class RegisterMenu extends Component {
     this.state = {
       firstName: null,
       lastName: null,
-      username:null,
+      username: null,
       email: null,
       password: null,
       errors: {
-        firstName: "",
-        lastName: "",
         email: "",
         username: "",
-        password: "",
+        password: ""
+      }
+    };
+  }
+
+  static propTypes = {
+    isAuthenticated: PropTypes.bool,
+    error: PropTypes.object.isRequired,
+    register: PropTypes.func.isRequired
+  };
+
+  componentDidUpdate(prevProps) {
+    const { error } = this.props;
+    if (error !== prevProps.error) {
+      if (error.id === "REGISTER_FAIL") {
+        this.setState({
+          errors: { ...prevProps.errors, email: error.msg.email, username: error.msg.username }
+        });
       }
     }
   }
 
-
-  handleChange = (event) => {
-    const { name, value } = event.target
-    let error = ""
-
-    console.log(name + " " + value)
+  handleChange = event => {
+    const { name, value } = event.target;
+    let error = "";
     if (name === "confirm-password") {
-      this.state.password === value ? error = "same password" : error = "error";
+      this.state.password === value
+        ? (error = "same password")
+        : (error = "error");
     }
     if (name === "email") {
     }
 
     this.setState({
       [name]: value
-    })
-  }
-  handleSubmit = (event) => {
+    });
+  };
+  handleSubmit = event => {
     event.preventDefault();
-    API.saveUser({
-        firstName: this.state.firstName,
-        lastName: this.state.lastName,
-        username: this.state.username,
-        email: this.state.email,
-        password: this.state.password
-    }).then((res)=>{
-      console.log(res.data)
-    })
-
-  }
+    const newUser = {
+      firstName: this.state.firstName,
+      lastName: this.state.lastName,
+      username: this.state.username,
+      email: this.state.email,
+      password: this.state.password
+    };
+    this.props.register(newUser);
+  };
 
   render() {
     const { classes } = this.props;
@@ -129,7 +142,6 @@ class RegisterMenu extends Component {
               type="password"
               id="password"
               onChange={this.handleChange}
-
             />
             <TextField
               variant="outlined"
@@ -143,7 +155,6 @@ class RegisterMenu extends Component {
               onChange={this.handleChange}
             />
             <Button
-              // type="submit"
               onClick={this.handleSubmit}
               fullWidth
               variant="contained"
@@ -151,7 +162,7 @@ class RegisterMenu extends Component {
               className={classes.submit}
             >
               Register
-          </Button>
+            </Button>
           </form>
         </div>
       </Paper>
@@ -160,8 +171,14 @@ class RegisterMenu extends Component {
 }
 
 RegisterMenu.propTypes = {
-  classes: PropTypes.object.isRequired,
-}
+  classes: PropTypes.object.isRequired
+};
 
-export default withStyles(styles)(RegisterMenu);
+const mapStateToProps = state => ({
+  isAuthenticated: state.auth.isAuthenticated,
+  error: state.error
+});
 
+const newRegisterMenu = withStyles(styles)(RegisterMenu);
+
+export default connect(mapStateToProps, { register })(newRegisterMenu);

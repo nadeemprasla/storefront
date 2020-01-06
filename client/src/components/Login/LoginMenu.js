@@ -1,68 +1,98 @@
-import React from "react";
-import { makeStyles } from "@material-ui/core/styles";
-import { Paper, Checkbox, Button, TextField, FormControlLabel } from "@material-ui/core";
+import React, { Component } from "react";
+import PropTypes from "prop-types";
+import { withStyles } from "@material-ui/core/styles";
+import { Paper, Checkbox, Button, TextField, FormControlLabel} from "@material-ui/core";
+import API from "../../utils/API";
 
-const useStyles = makeStyles(theme => ({
+const styles = theme => ({
   root: {
     borderRadius: 3,
     border: 0,
-    padding: '1vh 1vw',
-    boxShadow: '0 3px 5px 2px rgba(255, 105, 135, .3)',
+    padding: "1vh 1vw",
+    boxShadow: "0 3px 5px 2px rgba(255, 105, 135, .3)",
     width: "35vw"
   },
   form: {
     // width: '100%',
-    marginTop: theme.spacing(1),
+    marginTop: theme.spacing(1)
   },
   submit: {
-    margin: theme.spacing(3, 0, 3),
-  },
-}));
+    margin: theme.spacing(3, 0, 3)
+  }
+});
 
-export default function LoginMenu() {
-  const classes = useStyles();
+class LoginMenu extends Component {
+  constructor() {
+    super();
+    this.state = {
+      username: null,
+      password: null
+    };
+  }
 
-  return (
-    <Paper className={classes.root}>
+  handleChange = event => {
+    const { name, value } = event.target;
+    this.setState({
+      [name]: value
+    });
+  };
+  handleSubmit = event => {
+    event.preventDefault();
+    API.loginUser(this.state).then((res)=>{
+        console.log("you are logged in")
+    })
+  };
 
-      <div className={classes.paper}>
-        <form className={classes.form} noValidate>
-          <TextField
-            variant="outlined"
-            margin="normal"
-            required
-            fullWidth
-            id="email"
-            label="Email Address"
-            name="email"
-          />
-          <TextField
-            variant="outlined"
-            margin="normal"
-            required
-            fullWidth
-            name="password"
-            label="Password"
-            type="password"
-            id="password"
-          />
-          <FormControlLabel
-            control={<Checkbox value="remember" color="primary" />}
-            label="Remember me"
-          />
-          <Button
-            type="submit"
-            fullWidth
-            variant="contained"
-            color="primary"
-            className={classes.submit}
-          >
-            Sign In
-          </Button>
+  render() {
+    const { classes } = this.props;
 
-        </form>
-      </div>
-
-    </Paper>
-  );
+    return (
+      <Paper className={classes.root}>
+        <div className={classes.paper}>
+          <form className={classes.form} noValidate>
+            <TextField
+              variant="outlined"
+              margin="normal"
+              required
+              fullWidth
+              id="username"
+              label="Username"
+              name="username"
+              onChange={this.handleChange}
+            />
+            <TextField
+              variant="outlined"
+              margin="normal"
+              required
+              fullWidth
+              name="password"
+              label="Password"
+              type="password"
+              id="password"
+              onChange={this.handleChange}
+            />
+            <FormControlLabel
+              control={<Checkbox value="remember" color="primary" />}
+              label="Remember me"
+            />
+            <Button
+              fullWidth
+              variant="contained"
+              color="primary"
+              className={classes.submit}
+              onClick={this.handleSubmit}
+            >
+              Sign In
+            </Button>
+          </form>
+        </div>
+      </Paper>
+    );
+  }
 }
+
+LoginMenu.propTypes = {
+  classes: PropTypes.object.isRequired
+};
+
+export default withStyles(styles)(LoginMenu);

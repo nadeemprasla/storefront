@@ -21,6 +21,7 @@ export const loadUser = () => (dispatch, getState) => {
       });
     })
     .catch(err => {
+        console.log(err)
       dispatch(returnErrors(err.response.data, err.response.status));
       dispatch({
         type: AUTH_ERROR
@@ -100,15 +101,6 @@ export const logout = () => {
   }
 }
 
-// export const tokenConfig = getState => {
-//   const token = getState().auth.token;
-//   let body = {}
-//   if (token) {
-//     body = { "x-auth-token": token }
-//     console.log(body)
-//   }
-//   return body;
-// };
 export const tokenConfig = getState => {
   const token = getState().auth.token;
   const config = {

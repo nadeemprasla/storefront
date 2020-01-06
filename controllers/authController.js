@@ -9,7 +9,7 @@ const auth = require("../middleware/auth");
 module.exports = {
   login: async function (req, res) {
     let { username, password } = await textController.formatUsername(req.body);
-    await db.Users.findOne({ username }).then(userFound => {
+    db.Users.findOne({ username }).then(userFound => {
       if (!userFound) return res.status(400).json("User does not exist.");
       bcrypt.compare(password, userFound.password).then(isMatch => {
         if (!isMatch)
@@ -31,8 +31,7 @@ module.exports = {
       });
     });
   },
-  verifyUser: async function (req, res) {
-    console.log(req.body)
+  verifyUser: function (req, res) {
     auth(req.body, res, (user, response) => {
       db.Users.findById(user.id)
         .select('-password')

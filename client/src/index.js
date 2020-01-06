@@ -6,8 +6,6 @@ import { Provider } from "react-redux";
 import store from "./store";
 import { loadUser } from './actions/authActions'
 
-
-
 class Main extends Component {
     componentDidMount() {
         store.dispatch(loadUser())
@@ -22,6 +20,5 @@ class Main extends Component {
         );
     }
 }
-
 
 ReactDOM.render(<Main />, document.getElementById("root"));

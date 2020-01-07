@@ -1,0 +1,1 @@
+{"version":3,"sources":["login.css","index.css"],"names":[],"mappings":"AAAA,MACI,YACJ,CCFA,KACI,QAAS,CACT,SACF,CACF,MACI,YACJ","file":"main.0dd3c909.chunk.css","sourcesContent":["#root {\n    display: flex;\n}","body {\n    margin: 0;\n    padding: 0;\n  }\n#root {\n    height: 100vh;\n}"]}

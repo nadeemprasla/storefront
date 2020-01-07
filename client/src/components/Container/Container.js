@@ -2,8 +2,9 @@ import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import { CssBaseline } from "@material-ui/core";
 import Navbar from "../Nav";
-import { BrowserRouter as Router } from "react-router-dom";
-
+import { BrowserRouter as Router, Route, Switch, Redirect } from "react-router-dom";
+import { Daily, Report } from "../Store";
+import DashboardComp from "../Dashboard";
 const useStyles = makeStyles(theme => ({
   root: {
     display: "flex"
@@ -45,7 +46,12 @@ export default function MiniDrawer() {
         />
         <main className={classes.content}>
           <div className={classes.toolbar} />
-          Main
+          <Switch>
+            <Route exact path="/dashboard" component={DashboardComp} />
+            <Route exact path="/daily" component={Daily} />
+            <Route exact path="/report" component={Report} />
+            <Route path="*"><Redirect to="/dashboard"/></Route>
+          </Switch>
         </main>
       </div>
     </Router>

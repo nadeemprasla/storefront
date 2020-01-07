@@ -4,7 +4,7 @@ import RegisterMenu from "./RegisterMenu"
 import Header from "./Header"
 import { Grid } from "@material-ui/core";
 import "./login.css"
-import { Switch, Route, BrowserRouter as Router } from "react-router-dom";
+import { Switch, Route, Redirect, BrowserRouter as Router } from "react-router-dom";
 
 
 export default class Nav extends Component {
@@ -31,7 +31,7 @@ export default class Nav extends Component {
           <Switch>
             <Route path="/login" component={LoginMenu} />
             <Route path="/register" component={RegisterMenu} />
-            <Route path="*" component={LoginMenu} />
+            <Route path="*"><Redirect to="/login"/></Route>
 
           </Switch>
         </Grid>

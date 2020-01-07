@@ -22,7 +22,9 @@ import {
   Dashboard,
   Store
 } from "@material-ui/icons";
+import { Link } from "react-router-dom";
 import Account from "./Account";
+import StoreComp from "./Store";
 const drawerWidth = 240;
 
 const useStyles = makeStyles(theme => ({
@@ -88,17 +90,16 @@ const useStyles = makeStyles(theme => ({
     flexGrow: 1
   }
 }));
-const FindIcon = (props) => {
-    switch (props.text) {
-        case "Dashboard":
-            return <Dashboard />
-        case "Store":
-            return <Store />
-        default:
-            return null
-    }
-}
-
+const FindIcon = props => {
+  switch (props.text) {
+    case "Dashboard":
+      return <Dashboard />;
+    case "Store":
+      return <Store />;
+    default:
+      return null;
+  }
+};
 
 export default function Nav(props) {
   const classes = useStyles();
@@ -151,17 +152,17 @@ export default function Nav(props) {
         </div>
         <Divider />
         <List>
-          {["Dashboard", "Store", "Send email", "Drafts"].map(
-            (text, index) => (
-              <ListItem button key={text}>
-                <ListItemIcon>
-                  <FindIcon text={text} />
-                </ListItemIcon>
-                <ListItemText primary={text} />
-              </ListItem>
-            )
-          )}
+          <Link to="/dashboard">
+            <ListItem button key={"Dashboard"}>
+              <ListItemIcon>
+                <FindIcon text={"Dashboard"} />
+              </ListItemIcon>
+              <ListItemText primary={"Dashboard"} />
+            </ListItem>
+          </Link>
         </List>
+        <Divider />
+        <StoreComp />
         <Divider />
         <List>
           {["All mail", "Trash", "Spam"].map((text, index) => (

@@ -1,5 +1,4 @@
-import React, { Component } from "react";
-import { BrowserRouter as Router } from "react-router-dom";
+import React, { Component, Fragment } from "react";
 import { connect } from "react-redux";
 import Login from "./components/Login";
 import Container from "./components/Container";
@@ -13,13 +12,14 @@ class App extends Component {
     const { isAuthenticated, user } = this.props.auth;
 
     return (
-      <Router>
+        <Fragment>
+
         {!isAuthenticated ? (
           <Login />
         ) : (
           <Container />
         )}
-      </Router>
+        </Fragment>
     );
   }
 }

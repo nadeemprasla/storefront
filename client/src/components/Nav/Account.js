@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from "react";
+import React, { Component } from "react";
 import { withStyles } from "@material-ui/core/styles";
 import {
   Button,
@@ -7,7 +7,7 @@ import {
   ListItemIcon,
   ListItemText
 } from "@material-ui/core";
-import { AccountCircle, ExitToApp } from "@material-ui/icons";
+import { AccountCircle, ExitToApp, Settings } from "@material-ui/icons";
 import { connect } from "react-redux";
 import { logout } from "../../actions/authActions";
 import PropTypes from "prop-types";
@@ -74,7 +74,7 @@ class Account extends Component {
           color="primary"
           onClick={this.handleClick}
         >
-          <AccountCircle fontSize="medium" style={{ marginRight: 10 }} />
+          <AccountCircle style={{ marginRight: 10 }} />
           Account
         </Button>
         <StyledMenu
@@ -86,7 +86,7 @@ class Account extends Component {
         >
           <StyledMenuItem>
             <ListItemIcon>
-              <AccountCircle fontSize="small" />
+              <Settings fontSize="small" />
             </ListItemIcon>
             <ListItemText primary="Setting" />
           </StyledMenuItem>

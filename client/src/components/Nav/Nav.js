@@ -18,7 +18,9 @@ import {
   ChevronLeft,
   ChevronRight,
   Inbox,
-  Mail
+  Mail,
+  Dashboard,
+  Store
 } from "@material-ui/icons";
 import Account from "./Account";
 const drawerWidth = 240;
@@ -86,6 +88,17 @@ const useStyles = makeStyles(theme => ({
     flexGrow: 1
   }
 }));
+const FindIcon = (props) => {
+    switch (props.text) {
+        case "Dashboard":
+            return <Dashboard />
+        case "Store":
+            return <Store />
+        default:
+            return null
+    }
+}
+
 
 export default function Nav(props) {
   const classes = useStyles();
@@ -138,14 +151,16 @@ export default function Nav(props) {
         </div>
         <Divider />
         <List>
-          {["Inbox", "Starred", "Send email", "Drafts"].map((text, index) => (
-            <ListItem button key={text}>
-              <ListItemIcon>
-                {index % 2 === 0 ? <Inbox /> : <Mail />}
-              </ListItemIcon>
-              <ListItemText primary={text} />
-            </ListItem>
-          ))}
+          {["Dashboard", "Store", "Send email", "Drafts"].map(
+            (text, index) => (
+              <ListItem button key={text}>
+                <ListItemIcon>
+                  <FindIcon text={text} />
+                </ListItemIcon>
+                <ListItemText primary={text} />
+              </ListItem>
+            )
+          )}
         </List>
         <Divider />
         <List>

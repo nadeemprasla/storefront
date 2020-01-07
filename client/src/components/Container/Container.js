@@ -2,6 +2,7 @@ import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import { CssBaseline } from "@material-ui/core";
 import Navbar from "../Nav";
+import { BrowserRouter as Router } from "react-router-dom";
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -33,18 +34,20 @@ export default function MiniDrawer() {
   };
 
   return (
-    <div className={classes.root}>
-      <CssBaseline />
-      <Navbar
-        open={open}
-        setOpen={setOpen}
-        handleDrawerOpen={handleDrawerOpen}
-        handleDrawerClose={handleDrawerClose}
-      />
-      <main className={classes.content}>
-        <div className={classes.toolbar} />
-        Main
-      </main>
-    </div>
+    <Router>
+      <div className={classes.root}>
+        <CssBaseline />
+        <Navbar
+          open={open}
+          setOpen={setOpen}
+          handleDrawerOpen={handleDrawerOpen}
+          handleDrawerClose={handleDrawerClose}
+        />
+        <main className={classes.content}>
+          <div className={classes.toolbar} />
+          Main
+        </main>
+      </div>
+    </Router>
   );
 }

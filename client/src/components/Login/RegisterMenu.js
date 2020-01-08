@@ -1,10 +1,13 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { withStyles } from "@material-ui/core/styles";
-import { Paper, Button, TextField } from "@material-ui/core";
+import { Paper } from "@material-ui/core";
 import { connect } from "react-redux";
 import { register } from "../../actions/authActions";
 import { clearErrors } from '../../actions/errorActions';
+import { RegisterForm } from './RegisterForm'
+import { Formik } from "formik";
+import * as Yup from "yup";
 
 const styles = theme => ({
   root: {
@@ -13,34 +16,27 @@ const styles = theme => ({
     padding: "1vh 1vw",
     boxShadow: "0 3px 5px 2px rgba(255, 105, 135, .3)",
     width: "35vw"
-  },
-  form: {
-    marginTop: theme.spacing(1)
-  },
-  submit: {
-    margin: theme.spacing(3, 0, 3)
   }
 });
 
-// const validEmailRegex = RegExp(
-//   /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i
-// );
+const validationSchema = Yup.object({
+  firstName: Yup.string("Enter a First Name").required("First Name is required"),
+  username: Yup.string("Enter a Username").required("Username is required"),
+  email: Yup.string("Enter your email")
+    .email("Enter a valid email")
+    .required("Email is required"),
+  password: Yup.string("")
+    .min(8, "Password must contain atleast 8 characters")
+    .required("Enter your password"),
+  confirmPassword: Yup.string("Enter your password")
+    .required("Confirm your password")
+    .oneOf([Yup.ref("password")], "Password does not match")
+});
 
 class RegisterMenu extends Component {
-  constructor() {
-    super();
-    this.state = {
-      firstName: null,
-      lastName: null,
-      username: null,
-      email: null,
-      password: null,
-      errors: {
-        email: "",
-        username: "",
-        password: ""
-      }
-    };
+  constructor(props) {
+    super(props);
+    this.state = {};
   }
 
   static propTypes = {
@@ -50,123 +46,22 @@ class RegisterMenu extends Component {
     clearErrors: PropTypes.func.isRequired
   };
 
-  componentDidUpdate(prevProps) {
-    const { error } = this.props;
-    if (error !== prevProps.error) {
-      if (error.id === "REGISTER_FAIL") {
-        this.setState({
-          errors: { ...prevProps.errors, email: error.msg.email, username: error.msg.username }
-        });
-      }
-    }
-  }
-
-  handleChange = event => {
-    const { name, value } = event.target;
-    // let error = "";
-    // if (name === "confirm-password") {
-    //   this.state.password === value
-    //     ? (error = "same password")
-    //     : (error = "error");
-    // }
-    // if (name === "email") {
-    // }
-
-    this.setState({
-      [name]: value
-    });
-  };
-  handleSubmit = event => {
-    event.preventDefault();
-    const newUser = {
-      firstName: this.state.firstName,
-      lastName: this.state.lastName,
-      username: this.state.username,
-      email: this.state.email,
-      password: this.state.password
-    };
-    this.props.register(newUser);
+  handleSubmit = data => {
+    this.props.register(data);
   };
 
   render() {
     const { classes } = this.props;
+    const values = { firstName: "", lastName: "", email: "", username: "", password: "", confirmPassword: "" };
 
     return (
       <Paper className={classes.root}>
-        <div className={classes.paper}>
-          <form className={classes.form} noValidate>
-            <TextField
-              variant="outlined"
-              margin="normal"
-              required
-              fullWidth
-              id="firstName"
-              label="First Name"
-              name="firstName"
-              onChange={this.handleChange}
-            />
-            <TextField
-              variant="outlined"
-              margin="normal"
-              fullWidth
-              id="lastName"
-              label="Last Name"
-              name="lastName"
-              onChange={this.handleChange}
-            />
-            <TextField
-              variant="outlined"
-              margin="normal"
-              required
-              fullWidth
-              id="email"
-              label="Email Address"
-              name="email"
-              onChange={this.handleChange}
-            />
-            <TextField
-              variant="outlined"
-              margin="normal"
-              required
-              fullWidth
-              id="username"
-              label="Username"
-              name="username"
-              onChange={this.handleChange}
-            />
-            <TextField
-              variant="outlined"
-              margin="normal"
-              required
-              fullWidth
-              name="password"
-              label="Password"
-              type="password"
-              id="password"
-              onChange={this.handleChange}
-            />
-            <TextField
-              variant="outlined"
-              margin="normal"
-              required
-              fullWidth
-              name="confirm-password"
-              label="Confirm Password"
-              type="password"
-              id="confirm-password"
-              onChange={this.handleChange}
-            />
-            <Button
-              onClick={this.handleSubmit}
-              fullWidth
-              variant="contained"
-              color="primary"
-              className={classes.submit}
-            >
-              Register
-            </Button>
-          </form>
-        </div>
+        <Formik
+          initialValues={values}
+          validationSchema={validationSchema}
+          onSubmit={this.handleSubmit}
+          isInitialValid={false}
+        >{props => <RegisterForm {...props} />}</Formik>
       </Paper>
     );
   }

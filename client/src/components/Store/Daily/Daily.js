@@ -1,6 +1,6 @@
 import React from "react";
 import { useFormik } from "formik";
-import "./styles.css";
+// import "./styles.css";
 import CashReceived from "./cashReceived";
 
 export const Daily = () => {

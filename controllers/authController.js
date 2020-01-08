@@ -10,7 +10,7 @@ module.exports = {
   login: async function (req, res) {
     let { username, password } = await textController.formatUsername(req.body);
     db.Users.findOne({ username }).then(userFound => {
-      if (!userFound) return res.status(400).json("User does not exist.");
+      if (!userFound) return res.status(400).json({ msg: "Invalid credentials" });
       bcrypt.compare(password, userFound.password).then(isMatch => {
         if (!isMatch)
           return res.status(400).json({ msg: "Invalid credentials" });

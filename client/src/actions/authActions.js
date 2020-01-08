@@ -21,7 +21,6 @@ export const loadUser = () => (dispatch, getState) => {
       });
     })
     .catch(err => {
-        console.log(err)
       dispatch(returnErrors(err.response.data, err.response.status));
       dispatch({
         type: AUTH_ERROR
@@ -65,19 +64,11 @@ export const register = ({
     });
 };
 
-export const login = ({
-  username,
-  password
-}) => dispatch => {
+export const login = (body) => dispatch => {
   const config = {
     headers: {
       "Content-Type": "application/json"
     }
-  };
-
-  const body = {
-    username,
-    password
   };
 
   API.loginUser(body, config)

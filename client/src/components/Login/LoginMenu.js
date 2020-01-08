@@ -1,10 +1,14 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { withStyles } from "@material-ui/core/styles";
-import { Paper, Checkbox, Button, TextField, FormControlLabel } from "@material-ui/core";
+import { Paper, Dialog, DialogTitle, DialogContent } from "@material-ui/core";
 import { connect } from "react-redux";
 import { login } from "../../actions/authActions";
 import { clearErrors } from '../../actions/errorActions';
+import { LoginForm } from './LoginForm'
+import { Formik } from "formik";
+import * as Yup from "yup";
+
 
 const styles = theme => ({
   root: {
@@ -14,25 +18,33 @@ const styles = theme => ({
     boxShadow: "0 3px 5px 2px rgba(255, 105, 135, .3)",
     width: "35vw"
   },
-  form: {
-    // width: '100%',
-    marginTop: theme.spacing(1)
+  modal: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
-  submit: {
-    margin: theme.spacing(3, 0, 3)
-  }
+  paper: {
+    backgroundColor: theme.palette.background.paper,
+    border: '2px solid #000',
+    boxShadow: theme.shadows[5],
+    padding: theme.spacing(2, 4, 3),
+  },
 });
 
+const validationSchema = Yup.object({
+  username: Yup.string("Enter a Username").required("Username is required"),
+  password: Yup.string("")
+    .required("Enter your password"),
+});
+
+
+
 class LoginMenu extends Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.state = {
-      username: null,
-      password: null,
-      errors: {
-        username: "",
-        password: ""
-      }
+      open: false,
+      error: ""
     };
   }
 
@@ -46,76 +58,43 @@ class LoginMenu extends Component {
   componentDidUpdate(prevProps) {
     const { error } = this.props;
     if (error !== prevProps.error) {
-      if (error.id === "LOGIN") {
+      if (error.id === "LOGIN_FAIL") {
+        this.setState({ open: true })
         this.setState({
-          errors: { ...prevProps.errors, username: error.msg.username, password: error.msg.password }
+          error: error.msg.msg
         });
       }
     }
   }
 
-  handleChange = event => {
-    const { name, value } = event.target;
-    this.setState({
-      [name]: value
-    });
+  handleSubmit = data => {
+    this.props.login(data);
   };
 
-  handleSubmit = event => {
-    event.preventDefault();
-    const user = {
-      username: this.state.username,
-      password: this.state.password
-    };
-
-    this.props.login(user);
-    
+  handleClose = () => {
+    this.setState({ open: false });
   };
+
 
   render() {
     const { classes } = this.props;
-
+    const values = { username: "", password: "" };
     return (
       <Paper className={classes.root}>
-        <div className={classes.paper}>
-          <form className={classes.form} noValidate>
-            <TextField
-              variant="outlined"
-              margin="normal"
-              required
-              fullWidth
-              id="username"
-              label="Username"
-              name="username"
-              onChange={this.handleChange}
-            />
-            <TextField
-              variant="outlined"
-              margin="normal"
-              required
-              fullWidth
-              name="password"
-              label="Password"
-              type="password"
-              id="password"
-              onChange={this.handleChange}
-            />
-            <FormControlLabel
-              control={<Checkbox value="remember" color="primary" />}
-              label="Remember me"
-            />
-            <Button
-              fullWidth
-              variant="contained"
-              color="primary"
-              className={classes.submit}
-              onClick={this.handleSubmit}
-            >
-              Sign In
-            </Button>
-          </form>
-        </div>
+        <Formik
+          initialValues={values}
+          validationSchema={validationSchema}
+          onSubmit={this.handleSubmit}
+          isInitialValid={false}
+        >{props => <LoginForm {...props} />}</Formik>
+
+
+        <Dialog open={this.state.open} onClose={this.handleClose}>
+          <DialogTitle>{this.state.error}</DialogTitle>
+          <DialogContent>Please try again or Contact Admin for password reset.</DialogContent>
+        </Dialog>
       </Paper>
+
     );
   }
 }

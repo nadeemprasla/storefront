@@ -22,9 +22,10 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-export default function StoreComp() {
+export default function StoreComp(props) {
   const classes = useStyles();
   const [open, setOpen] = React.useState(true);
+  const {updateSelected, selected} = props
 
   const handleClick = () => {
     setOpen(!open);
@@ -41,16 +42,16 @@ export default function StoreComp() {
       </ListItem>
       <Collapse in={open} timeout="auto" unmountOnExit>
         <List component="div" disablePadding>
-          <Link to="/daily">
-            <ListItem button className={classes.nested}>
+          <Link to="/daily" style={{ textDecoration: "none", color:"black" }}>
+            <ListItem button className={classes.nested} onClick={()=>{updateSelected(1)}} selected={selected === 1}>
               <ListItemIcon>
                 <Create />
               </ListItemIcon>
               <ListItemText primary="Daily" />
             </ListItem>
           </Link>
-          <Link to="/report">
-            <ListItem button className={classes.nested}>
+          <Link to="/report" style={{ textDecoration: "none", color:"black" }}>
+            <ListItem button className={classes.nested} onClick={()=>{updateSelected(2)}} selected={selected === 2}>
               <ListItemIcon>
                 <Description />
               </ListItemIcon>

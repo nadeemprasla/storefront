@@ -1,4 +1,4 @@
-import React, { Fragment } from "react";
+import React, { Fragment,useState } from "react";
 import clsx from "clsx";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
 import {
@@ -20,13 +20,11 @@ import {
   Inbox,
   Mail,
   Dashboard,
-  Store
 } from "@material-ui/icons";
 import { Link } from "react-router-dom";
 import Account from "./Account";
 import StoreComp from "./Store";
 const drawerWidth = 240;
-
 const useStyles = makeStyles(theme => ({
   root: {
     display: "flex"
@@ -90,22 +88,15 @@ const useStyles = makeStyles(theme => ({
     flexGrow: 1
   }
 }));
-const FindIcon = props => {
-  switch (props.text) {
-    case "Dashboard":
-      return <Dashboard />;
-    case "Store":
-      return <Store />;
-    default:
-      return null;
-  }
-};
 
 export default function Nav(props) {
-  const classes = useStyles();
-  const theme = useTheme();
-  const { open, handleDrawerClose, handleDrawerOpen } = props;
-
+    const classes = useStyles();
+    const theme = useTheme();
+    const { open, handleDrawerClose, handleDrawerOpen } = props;
+    const [selected, setSelected] = useState(null);
+    const updateSelected = (num) => {
+        setSelected(num);
+      };
   return (
     <Fragment>
       <AppBar
@@ -152,17 +143,21 @@ export default function Nav(props) {
         </div>
         <Divider />
         <List>
-          <Link to="/dashboard">
-            <ListItem button key={"Dashboard"}>
+          <Link
+            to="/dashboard"
+            style={{ textDecoration: "none", color: "black" }}
+          >
+            <ListItem button key={"Dashboard"} onClick={()=>{updateSelected(0)}} selected={selected === 0}>
               <ListItemIcon>
-                <FindIcon text={"Dashboard"} />
+                <Dashboard />
               </ListItemIcon>
               <ListItemText primary={"Dashboard"} />
             </ListItem>
           </Link>
         </List>
         <Divider />
-        <StoreComp />
+        
+        <StoreComp updateSelected={updateSelected} selected={selected} />
         <Divider />
         <List>
           {["All mail", "Trash", "Spam"].map((text, index) => (

@@ -6,29 +6,19 @@ import {
   InputAdornment
 } from "@material-ui/core";
 
-
 export const CashReceived = props => {
   let {
     values: {
       openingCash,
       nonTax,
-      tax,
-      totalSales,
-      salesTax,
-      lotterySales,
-      lottoSales,
-      checkCash,
-      cashDown,
-      moneyOrder,
-      badCheck,
-      creditSaleCol
+    ...initialValues
     },
     errors,
     handleSubmit,
-    handleChange,
+    stateChange,
     isValid
   } = props;
-
+console.log(stateChange)
   return (
     <Fragment>
       <h1>Daily Entry</h1>
@@ -43,7 +33,7 @@ export const CashReceived = props => {
           error={Boolean(errors.openingCash)}
           label="Opening Cash"
           value={openingCash}
-          onChange={handleChange}
+          onChange={stateChange}
           type="number"
           fullWidth
           margin="normal"
@@ -60,20 +50,14 @@ export const CashReceived = props => {
           error={Boolean(errors.nonTax)}
           label="$"
           value={nonTax}
-          onChange={handleChange}
+          onChange={stateChange}
           fullWidth
           margin="normal"
           variant="outlined"
         />
-        {/*    <Button
-                type="submit"
-                fullWidth
-                variant="contained"
-                color="primary"
-                disabled={!isValid}
-            >
-                Submit
-			</Button> */}
+        <Button type="submit" fullWidth variant="contained" color="primary">
+          Submit
+        </Button>
       </form>
     </Fragment>
   );

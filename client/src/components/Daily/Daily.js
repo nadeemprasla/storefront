@@ -29,21 +29,34 @@ const validationSchema = Yup.object({
 });
 
 class Daily extends Component {
+    constructor() {
+        super()
+        this.state = receivedData
+    }
   handleSubmit = data => {
     console.log(data);
   };
 
+ handleChange = data => {
+    //  const {name, value} = data
+    console.log(data)
+    //  this.setState({
+    //      ...this.state,
+    //      [name]:value
+    //  })
+ }
+
   render() {
     const { classes } = this.props;
-    const values = receivedData;
 
     return (
       <Paper className={classes.root}>
         <Formik
-          initialValues={values}
+          initialValues={this.state}
           validationSchema={validationSchema}
           onSubmit={this.handleSubmit}
           isInitialValid={false}
+          stateChange={this.handleChange}
         >
           {props => <CashReceived {...props} />}
         </Formik>

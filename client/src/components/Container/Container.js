@@ -3,7 +3,8 @@ import { makeStyles } from "@material-ui/core/styles";
 import { CssBaseline } from "@material-ui/core";
 import Navbar from "../Nav";
 import { BrowserRouter as Router, Route, Switch, Redirect } from "react-router-dom";
-import { Daily, Report } from "../Store";
+import Daily from "../Daily";
+import Report from "../Report";
 import DashboardComp from "../Dashboard";
 const useStyles = makeStyles(theme => ({
   root: {

@@ -42,7 +42,24 @@ module.exports = {
     auth(req.body, res, (user, response) => {
       db.Users.findById(user.id)
         .select("-password")
-        .then(userFound => response.json(userFound));
+        .then(userFound => {
+          const {
+            _id,
+            firstName,
+            lastName,
+            username,
+            email,
+            register_date
+          } = userFound;
+          let data = {  id: _id,
+            firstName,
+            lastName,
+            username,
+            email,
+            register_date
+          };
+          response.json(data);
+        });
     });
   }
 };

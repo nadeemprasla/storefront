@@ -135,7 +135,7 @@ class Daily extends Component {
     this.props.sendItem(data);
   };
 
-  handleChange = (name, value = 0) => {
+  handleChange = (name, value) => {
     this.setState({
       item: {
         ...this.state.item,

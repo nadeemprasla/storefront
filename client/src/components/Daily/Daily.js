@@ -112,11 +112,13 @@ class Daily extends Component {
     this.props.loadItem(data);
   }
   componentDidUpdate(prevProp) {
-    // console.log(prevProp.item.item);
-    // console.log(this.props.item.item)
+    if (this.props.item.isLoading === false) {
+      if (prevProp.item.item !== this.props.item.item) {
+        this.setState({ item: this.props.item.item });
+      }
+    }
     if (this.state.firstLoad === false) {
       if (prevProp.item.item !== this.props.item.item) {
-        console.log("item are updated       ", this.props.item.item);
         this.setState({ firstLoad: true, item: this.props.item.item });
       }
     }
@@ -131,7 +133,6 @@ class Daily extends Component {
       item: this.state.item,
       user: user
     };
-    console.log(data);
     this.props.sendItem(data);
   };
 

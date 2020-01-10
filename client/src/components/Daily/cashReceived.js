@@ -1,20 +1,19 @@
 import React from "react";
-import { makeStyles } from '@material-ui/core/styles';
-import {
-  TextField,
-} from "@material-ui/core";
+import { makeStyles } from "@material-ui/core/styles";
+import { TextField } from "@material-ui/core";
 import receivedData from "./cashReceivedData";
 
 const useStyles = makeStyles({
   root: {
-   width:"80%"
+    width: "80%",
+    zIndex: 0
   },
+  filled: {}
 });
 
-
-export const CashReceived = (props) => {
+export const CashReceived = props => {
   const classes = useStyles();
-  const { handleChange, state, NumberFormatCustom } = props
+  const { handleChange, state, NumberFormatCustom } = props;
   return (
     <div>
       <h3>Cash Received</h3>
@@ -35,9 +34,8 @@ export const CashReceived = (props) => {
               inputComponent: NumberFormatCustom
             }}
           />
-        )
+        );
       })}
-
     </div>
   );
 };

@@ -107,6 +107,7 @@ const mapStateToProps = state => ({
   isAuthenticated: state.auth.isAuthenticated,
   error: state.error
 });
+
 const newLoginMenu = withStyles(styles)(LoginMenu);
 export default connect(mapStateToProps, { login, clearErrors })(newLoginMenu);
 

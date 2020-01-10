@@ -3,8 +3,14 @@ import { withStyles } from "@material-ui/core/styles";
 import { Button, Paper } from "@material-ui/core";
 import { CashReceived } from "./cashReceived";
 import { CashPaid } from "./cashPaid";
-import NumberFormat from 'react-number-format';
-import PropTypes from 'prop-types';
+import NumberFormat from "react-number-format";
+import PropTypes from "prop-types";
+import "react-dates/initialize";
+import { SingleDatePicker } from "react-dates";
+import { connect } from "react-redux";
+import { loadItem, sendItem } from "../../actions/itemActions";
+
+var moment = require("moment");
 
 const styles = theme => ({
   root: {
@@ -22,16 +28,17 @@ const styles = theme => ({
     padding: theme.spacing(2, 4, 3)
   },
   form: {
-    display: "flex",
+    display: "flex"
   },
   submitHolder: {
     justifyContent: "flex-end",
     display: "flex"
   },
   submit: {
-    width:"45%"
+    width: "45%"
   }
 });
+
 function NumberFormatCustom(props) {
   const { inputRef, onChange, name, ...other } = props;
   return (
@@ -51,14 +58,17 @@ function NumberFormatCustom(props) {
 
 NumberFormatCustom.propTypes = {
   inputRef: PropTypes.func.isRequired,
-  onChange: PropTypes.func.isRequired,
+  onChange: PropTypes.func.isRequired
 };
 
 class Daily extends Component {
-  constructor() {
-    super()
+  constructor(props) {
+    super(props);
     this.state = {
-      cashReceived: {
+      date: moment(),
+      focused: false,
+      firstLoad: false,
+      item: {
         openingCash: "",
         nonTax: "",
         tax: "",
@@ -70,72 +80,133 @@ class Daily extends Component {
         cashDown: "",
         moneyOrder: "",
         badCheck: "",
-        creditSaleCol: ""
-      },
-      cashPaid: {
-        "closingCash": "",
-        "foodStamps": "",
-        "creditCard": "",
-        "purchasing": "",
-        "bankDeposit": "",
-        "atm": "",
-        "creditSale": "",
-        "services": "",
-        "expenseDetail": "",
-        "lotLotteryCashes": ""
+        creditSaleCol: "",
+        closingCash: "",
+        foodStamps: "",
+        creditCard: "",
+        purchasing: "",
+        bankDeposit: "",
+        atm: "",
+        creditSale: "",
+        services: "",
+        expenseDetail: "",
+        lotLotteryCashes: ""
+      }
+    };
+  }
+
+  static propTypes = {
+    user: PropTypes.object.isRequired,
+    loadItem: PropTypes.func.isRequired,
+    sendItem: PropTypes.func.isRequired,
+    item: PropTypes.object.isRequired
+  };
+
+  componentDidMount() {
+    let date = moment(this.state.date._d).format("MMM DD YYYY");
+    let user = this.props.user;
+    let data = {
+      date: date,
+      user: user
+    };
+    this.props.loadItem(data);
+  }
+  componentDidUpdate(prevProp) {
+    // console.log(prevProp.item.item);
+    // console.log(this.props.item.item)
+    if (this.state.firstLoad === false) {
+      if (prevProp.item.item !== this.props.item.item) {
+        console.log("item are updated       ", this.props.item.item);
+        this.setState({ firstLoad: true, item: this.props.item.item });
       }
     }
   }
+
   handleSubmit = event => {
     event.preventDefault();
+    let user = this.props.user;
+    let date = moment(this.state.date._d).format("MMM DD YYYY");
+    let data = {
+      date: date,
+      item: this.state.item,
+      user: user
+    };
+    console.log(data);
+    this.props.sendItem(data);
   };
 
-  handleReceived = (name, value) => {
+  handleChange = (name, value = 0) => {
     this.setState({
-      cashReceived: {
-        ...this.state.cashReceived,
+      item: {
+        ...this.state.item,
         [name]: value
       }
-    })
-  }
-  handlePaid = (name, value) => {
-    this.setState({
-      cashPaid: {
-        ...this.state.cashPaid,
-        [name]: value
-      }
-    })
-  }
+    });
+  };
 
+  handleDateChange = date => {
+    this.setState(prevState => {
+      let prevDate = moment(prevState.date._d).format("MMM DD YYYY");
+      let newDate = moment(date._d).format("MMM DD YYYY");
+      if (prevDate !== newDate) {
+        let user = this.props.user;
+        let data = {
+          date: newDate,
+          user: user
+        };
+        this.props.loadItem(data);
+      }
+      return { date: date };
+    });
+  };
   render() {
     const { classes } = this.props;
     return (
       <Paper className={classes.root}>
         <h1>Daily Entry</h1>
-        <form
-          onSubmit={this.handleSubmit}>
+        <form onSubmit={this.handleSubmit}>
+          <SingleDatePicker
+            readOnly
+            displayFormat="MMM DD YYYY"
+            date={this.state.date}
+            onDateChange={date => this.handleDateChange(date)}
+            focused={this.state.focused}
+            onFocusChange={({ focused }) => this.setState({ focused })}
+            id="date"
+            isOutsideRange={() => false}
+          />
           <div className={classes.form}>
             <CashReceived
-              handleChange={this.handleReceived}
-              state={this.state.cashReceived}
+              handleChange={this.handleChange}
+              state={this.state.item}
               NumberFormatCustom={NumberFormatCustom}
             />
             <CashPaid
-              handleChange={this.handlePaid}
-              state={this.state.cashPaid}
+              handleChange={this.handleChange}
+              state={this.state.item}
               NumberFormatCustom={NumberFormatCustom}
             />
           </div>
           <div className={classes.submitHolder}>
-            <Button className={classes.submit} type="submit" variant="contained" color="primary">
+            <Button
+              className={classes.submit}
+              type="submit"
+              variant="contained"
+              color="primary"
+            >
               Submit
-        </Button>
+            </Button>
           </div>
         </form>
-
       </Paper>
     );
   }
 }
 
-export default withStyles(styles)(Daily);
+const mapStateToProps = state => ({
+  user: state.auth.user,
+  item: state.item
+});
+
+const newDaily = withStyles(styles)(Daily);
+export default connect(mapStateToProps, { loadItem, sendItem })(newDaily);

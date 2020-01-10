@@ -26,7 +26,11 @@ const usersSchema = new Schema({
   register_date: {
     type: Date,
     default: Date.now
-  }
+  },
+  item: [{
+      type: Schema.Types.ObjectId,
+      ref: "Item"
+  }]
 });
 
 const Users = mongoose.model("Users", usersSchema);

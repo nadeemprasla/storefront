@@ -7,7 +7,8 @@ import paidData from "./cashPaidData";
 
 const useStyles = makeStyles({
     root: {
-        
+        zIndex: 0
+
     },
 });
 
@@ -17,6 +18,7 @@ const useStyles = makeStyles({
 export const CashPaid = (props) => {
     const classes = useStyles();
     const { handleChange, state, NumberFormatCustom } = props
+    console.log(state)
     return (
         <div>
             <h3>Cash Paid</h3>

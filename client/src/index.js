@@ -5,6 +5,7 @@ import './index.css'
 import { Provider } from "react-redux";
 import store from "./store";
 import { loadUser } from './actions/authActions'
+import 'react-dates/lib/css/_datepicker.css'
 
 class Main extends Component {
     componentDidMount() {
